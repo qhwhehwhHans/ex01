@@ -120,7 +120,8 @@ $ sqlite3 --version
 $ gem install rails
 ```
 
-이하의 명령을 실행하여 레일스가 정상적으로 설치되었는지 확인할 수 있습니다.
+이하의 명령을 실행하여 레일스가 
+정상적으로 설치되었는지 확인할 수 있습니다.
 
 ```bash
 $ rails --version
@@ -362,8 +363,7 @@ end
 ```
 
 커맨드 라인에서 `bin/rails routes` 명령을 실행하면 
-표준적인 RESTful 액션에 필요한 라우팅이 모두 정의되어 있는 것을 확인할 수 있습니다. 이하 출력의 자세한 내용에 대해서는 나중에 설명할 것입니다만,
- 우선 주목해야하는 부분은 레일스는 `articles`라는 리소스명으로부터 단수형인 `article`을 추측하고, 
+표준적인 RESTful 액션에 필요한 라우팅이 모두 정의되어 있는 것을 확인할 수 있습니다. 이하 출력의 자세한 내용에 대해서는 나중에 설명할 것입니다만, 우선 주목해야하는 부분은 레일스는 `articles`라는 리소스명으로부터 단수형인 `article`을 추측하고, 
 각각을 그 의미에 맞게 사용하고 있다는 점입니다. 
 prefix에서 단일 항목을 가리킬 때에는 단수형 article, 복수 항목을 다뤄야 하는 경우에는 복수형 articles가 사용되고 있습니다.
 
@@ -679,7 +679,8 @@ TIP: 액티브레코드는 데이터베이스의 컬럼명과 모델의 속성�
  마이그레이션을 사용해서 발생한 데이터베이스의 변경은,
  나중에 취소할 수도 있습니다. 또한 마이그레이션 파일의 이름에는 타임스탬프가 포함되어 있으며, 이를 이용해서 마이그레이션이 생성된 순서대로 실행됩니다.
 
-여기서 `db/migrate/YYYYMMDDHHMMSS_create_articles.rb` 파일을 에디터로 열어보면(타임스탬프는 다를 수 있다는 점을 주의해주세요) 아래와 같이 되어있습니다.
+여기서 `db/migrate/YYYYMMDDHHMMSS_create_articles.rb` 파일을 에디터로 
+열어보면(타임스탬프는 다를 수 있다는 점을 주의해주세요) 아래와 같이 되어있습니다.
 
 ```ruby
 class CreateArticles < ActiveRecord::Migration[5.0]
@@ -1536,6 +1537,7 @@ class Comment < ApplicationRecord
   belongs_to :article
 end
 ```
+
 Comment 모델의 내용은 이전에 보았던 `Article` 모델과 무척 닮아 있습니다. 
 다른 점이라고 한다면 액티브레코드의 _관계(Association)_를 설정하기 위한 `belongs_to :article`라는 줄이 있다는 부분 뿐입니다. 
 관계에 대해서는 다음 절에서 설명합니다
@@ -1599,7 +1601,8 @@ class Comment < ApplicationRecord
 end
 ```
 
-그리고 Article 모델(`app/models/article.rb`)을 편집해서 나머지 관계 정보를 추가할 필요가 있습니다.
+그리고 Article 모델(`app/models/article.rb`)을 편집해서 
+나머지 관계 정보를 추가할 필요가 있습니다.
 
 ```ruby
 class Article < ApplicationRecord
@@ -1636,7 +1639,6 @@ end
 TIP: 라우팅의 자세한 설명은 [레일스 라우팅](routing.html)을 
 참조해주세요.
 
-
 ### 컨트롤러 생성하기
 
 모델을 수작업으로 만들었으니, 여기에 맞는 컨트롤러를 생성해야합니다. 
@@ -1663,7 +1665,8 @@ $ bin/rails generate controller Comments
 그러므로 `CommentsController`를 이용해서 덧글을 추가하거나, 
 스팸 덧글을 제거할 수 있도록 할 것입니다.
 
-우선 Article의 show 템플릿(`app/views/articles/show.html.erb`)를 고쳐서 새 덧글을 작성할 수 있도록 해봅시다.
+우선 Article의 show 템플릿(`app/views/articles/show.html.erb`)를 고쳐서 
+새 덧글을 작성할 수 있도록 해봅시다.
 
 ```html+erb
 <p>
@@ -1719,7 +1722,8 @@ end
 위의 코드는, Article 컨트롤러의 코드에서 작성했던 것보다 복잡해 보입니다. 
 이는 중첩(nesting)을 사용했기 때문입니다. 
 덧글 관련의 요청은 어떤 글에 대해서 덧글이 추가되어야 하는지를 알아야 합니다. 
-그래서 `Article` 모델의 `find` 메소드를 호출해, 요청에서 언급된 글(의 객체)를 받아서 @article에 저장합니다.
+그래서 `Article` 모델의 `find` 메소드를 호출해, 
+요청에서 언급된 글(의 객체)를 받아서 @article에 저장합니다.
 
 그리고 관계 설정에 의해서 사용할 수 있게 된 메소드를 사용하고 있습니다. 
 `@article.comments`에 대해서 `create` 메소드를 실행하는 것으로 덧글의 생성과 저장을 동시에 수행하고 있습니다. 
@@ -1729,7 +1733,8 @@ end
 새로운 덧글 생성이 끝나면 `article_path(@article)` 헬퍼를 사용해서 원래의 글 페이지로 돌아갑니다. 
 이미 설명했듯, 이 헬퍼를 호출하면 `ArticlesController`의 `show` 액션이 호출되어, 
 `show.html.erb` 템플릿이 랜더링됩니다. 
-이 화면에서 덧글을 보여주고 싶으므로 `app/views/articles/show.html.erb`에 다음과 같은 코드를 추가합시다.
+이 화면에서 덧글을 보여주고 싶으므로 
+`app/views/articles/show.html.erb`에 다음과 같은 코드를 추가합시다.
 
 ```html+erb
 <p>
@@ -1782,7 +1787,8 @@ end
 리팩토링
 -----------
 
-그럼 블로그의 글과 덧글과 관련된 기능이 동작하게 되었으므로, 잠시 `app/views/articles/show.html.erb` 템플릿을 확인해봅시다. 
+그럼 블로그의 글과 덧글과 관련된 기능이 동작하게 되었으므로, 
+잠시 `app/views/articles/show.html.erb` 템플릿을 확인해봅시다. 
 코드가 많아서 읽기 힘들어 보입니다. 여기에서도 파셜을 이용해서 코드를 깔끔하게 정리해 보죠.
 
 ### 파셜 컬렉션을 랜더링하기
@@ -1925,7 +1931,9 @@ end
 </p>
 ```
 
-이 새로운 "Destroy Comment" 링크를 클릭하면 `DELETE /articles/:article_id/comments/:id` 라는 요청이 `CommentsController`로 전송됩니다. 컨트롤러는 그것을 수신하고 어떤 덧글을 삭제해야 할지 검색할 겁니다. 그러면 컨트롤러`(app/controllers/comments_controller.rb)`에 `destroy` 액션을 추가해야됩니다.
+이 새로운 "Destroy Comment" 링크를 클릭하면 
+`DELETE /articles/:article_id/comments/:id` 라는 요청이 `CommentsController`로 전송됩니다. 컨트롤러는 그것을 수신하고 어떤 덧글을 삭제해야 할지 검색할 겁니다. 
+그러면 컨트롤러`(app/controllers/comments_controller.rb)`에 `destroy` 액션을 추가해야됩니다.
 
 ```ruby
 class CommentsController < ApplicationController
@@ -2029,6 +2037,7 @@ class CommentsController < ApplicationController
 [Devise](https://github.com/plataformatec/devise)와 [Authlogic](https://github.com/binarylogic/authlogic) 
 잼입니다.
 
+
 ### 그 이외의 보안 대책
 
 보안, 특히 웹 애플리케이션의 보안은 무척 폭이 넓고, 깊습니다. 
@@ -2042,7 +2051,8 @@ class CommentsController < ApplicationController
 이후에는 자유롭게 고쳐보거나, 새로운 것을 시도하셔도 좋습니다.
 
 물론 아무 도움 없이 웹 애플리케이션을 만들 필요는 없습니다. 레일스를 사용해서 Web 애플리케이션을 만들거나, 
-동작시킬 때에 도움이 필요하다면, 아래의 지원 문서들을 자유롭게 참조해주세요.
+동작시킬 때에 도움이 필요하다면, 
+아래의 지원 문서들을 자유롭게 참조해주세요.
 
 * [루비온레일스 가이드](index.html)
 * [루비온레일스 튜토리얼](http://railstutorial.org/book)
@@ -2055,7 +2065,8 @@ class CommentsController < ApplicationController
 
 레일스에서의 쓸모없는 문제를 피하기 위한 가장 기초적인 방법은 외부 데이터를 항상 UTF-8로 저장하는 것입니다. 
 그렇게 하지 않으면, Ruby 라이브러리나 레일스는 그 데이터들을 매번 UTF-8로 변환해야 합니다. 
-심지어는 때때로 변환에 실패하기도 합니다. 외부 데이터는 항상 UTF-8로 저장하는 것을 권장합니다.
+심지어는 때때로 변환에 실패하기도 합니다. 
+외부 데이터는 항상 UTF-8로 저장하는 것을 권장합니다.
 
 외부 데이터의 인코딩이 통일되어 있지 않은 경우 자주 발생하는 증상으로는 
 화면이 검은색 다이아몬드(◆)와 물음표가 표시되는 것이 있습니다. 
