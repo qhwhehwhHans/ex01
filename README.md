@@ -759,18 +759,32 @@ TIP: 나중에 설명합니다만,
 
 ![새 article을 위한 속성 사용이 금지됨](images/getting_started/forbidden_attributes_for_new_article.png)
 
-레일스에는 보안성이 높은 애플리케이션을 편리하게 개발하기 위한 기능들이 여럿 있으며, 여기에서는 그 기능 때문에 에러가 발생한 것입니다. 이것은  `[strong parameters]`(action_controller_overview.html#strong-parameters), 라고 불리는 것으로, 컨트롤러의 액션에서 실제로 사용할 매개변수만을 지정하도록 강제합니다.
+레일스에는 보안성이 높은 애플리케이션을 편리하게 개발하기 위한 기능들이 여럿 있으며, 
+여기에서는 그 기능 때문에 에러가 발생한 것입니다. 
+이것은  `[strong parameters]`(action_controller_overview.html#strong-parameters), 
+라고 불리는 것으로, 컨트롤러의 액션에서 실제로 사용할 매개변수만을 지정하도록 강제합니다.
 
+어째서 그런 귀찮은 작업을 하지 않으면 안될까요?
+ 컨트롤러가 넘겨받은 매개변수를 전혀 검사하지 않고 자동적으로 모델에 넘기는 쪽이 확실히 개발하기 쉽습니다만, 매개변수를 이런 식으로 넘겨주면,
+ 매개변수를 검사하지 않는 부분을 공격자에게 악용당할 우려가 있습니다.
+ 예를 들자면, 서버에 보내지는 새 글의 정보에,
+ 공격자가 본래는 없었던 필드를 몰래 추가해서 전송할 수 있습니다. 
+체크되지 않은 매개변수를 그대로 모델에 저장(mass assignment)하고,
+ 데이터베이스에 저장하는 것은 잠재적으로 애플리케이션을 망가뜨릴 가능성을 만듭니다.
 
-어째서 그런 귀찮은 작업을 하지 않으면 안될까요? 컨트롤러가 넘겨받은 매개변수를 전혀 검사하지 않고 자동적으로 모델에 넘기는 쪽이 확실히 개발하기 쉽습니다만, 매개변수를 이런 식으로 넘겨주면, 매개변수를 검사하지 않는 부분을 공격자에게 악용당할 우려가 있습니다. 예를 들자면, 서버에 보내지는 새 글의 정보에, 공격자가 본래는 없었던 필드를 몰래 추가해서 전송할 수 있습니다. 체크되지 않은 매개변수를 그대로 모델에 저장(mass assignment)하고, 데이터베이스에 저장하는 것은 잠재적으로 애플리케이션을 망가뜨릴 가능성을 만듭니다.
-
-그런 이유로 컨트롤러에 넘겨질 매개변수를 화이트 리스트로 확인하고, 부정한 데이터를 걸러낼 필요가 있습니다. 이 경우, create에서 매개변수를 안전하게 사용하기 위해서 `title`과 `text` 매개변수의 사용만을 '허가'하고, '필수'임을 지정하고 싶습니다. 이 작업을 위해서 `require` 메소드와 `permit` 메소드가 제공됩니다. 이를 사용해서 해당하는 줄을 다음과 같이 고칩니다.
+그런 이유로 컨트롤러에 넘겨질 매개변수를 화이트 리스트로 확인하고, 
+부정한 데이터를 걸러낼 필요가 있습니다. 
+이 경우, create에서 매개변수를 안전하게 사용하기 위해서 
+`title`과 `text` 매개변수의 사용만을 '허가'하고, '필수'임을 지정하고 싶습니다. 이 작업을 위해서 `require` 메소드와 `permit` 메소드가 제공됩니다. 이를 사용해서 해당하는 줄을 다음과 같이 고칩니다.
 
 ```ruby
   @article = Article.new(params.require(:article).permit(:title, :text))
 ```
 
-이 방법을 매번 사용하는 것은 귀찮으므로, 예를 들어 `create` 액션과 `update` 액션에서 해당 작업을 공유할 수 있도록 이 메소드를 추출하는 것이 일반적입니다. 추출한 메소드는 외부에서 호출할 수 없도록 `private` 선언 뒤에 두세요.
+이 방법을 매번 사용하는 것은 귀찮으므로,
+ 예를 들어 `create` 액션과 `update` 액션에서 해당 작업을 공유할 수 있도록 이 메소드를 추출하는 것이 일반적입니다. 
+추출한 메소드는 외부에서 호출할 수 없도록
+ `private` 선언 뒤에 두세요.
 
 ```ruby
 def create
@@ -786,25 +800,34 @@ private
   end
 ```
 
-TIP: 자세한 내용에 대해서는 위에서 언급한 참고 자료와 
+TIP: 자세한 내용에 대해서는 
+위에서 언급한 참고 자료와 
 [String Parameters에 대한 공식 블로그의 글(영어)](http://weblog.rubyonrails.org/2012/3/21/strong-parameters/)를 참조해주세.
 
 ### 글 보여주기
 
-이제 양식을 재전송하면, 레일스는 `show` 액션이 없다는 에러 메시지를 돌려줍니다. 이래서는 곤란하므로 `show` 액션을 추가하고 진행하도록 합니다.
+이제 양식을 재전송하면,
+ 레일스는 `show` 액션이 없다는 에러 메시지를 돌려줍니다. 
+이래서는 곤란하므로 `show` 액션을 추가하고 진행하도록 합니다.
 
-`bin/rails routes`의 출력 결과에서 볼 수 있었듯 `show` 액션의 라우팅은 다음과 같습니다.
+`bin/rails routes`의 출력 결과에서 볼 수 있었듯
+ `show` 액션의 라우팅은 다음과 같습니다.
 
 ```
 article GET    /articles/:id(.:format)      articles#show
 ```
 
-`:id`는 `:id` 매개변수가 보내져야 한다는 것을 보여주기 위한 특수 문법입니다. 여기에서는 글의 id를 나타냅니다.
+`:id`는 `:id` 매개변수가 보내져야 한다는 것을 보여주기 위한 특수 문법입니다. 
+여기에서는 글의 id를 나타냅니다.
 
-new에서 이미 했었던 방식과 같은 요령으로 `app/controllers/articles_controller.rb`에 `show` 액션을 추가하고 이에 대응하는 뷰도 추가할 필요가 있습니다.
+new에서 이미 했었던 방식과 같은 요령으로 
+`app/controllers/articles_controller.rb`에 `show` 액션을 추가하고 이에 대응하는 뷰도 추가할 필요가 있습니다.
 
-NOTE: 관습적으로 많이 쓰이는 CRUD 액션들의 위치 순서는 `index`, `show`, `new`, `edit`, `create`, `update`
-그리고 `destroy`입니다. 원하는 대로 순서를 정해도 좋습니다만 공개 메소드인 채로 두어야 한다는 점을 명심하세요. 이 가이드의 앞 부분에서 이야기했듯, 동작하기 위해서는 `private`나 `protected` 메소드여서는 안됩니다.
+NOTE: 관습적으로 많이 쓰이는 CRUD 액션들의 위치 순서는
+ `index`, `show`, `new`, `edit`, `create`, `update`
+그리고 `destroy`입니다. 원하는 대로 순서를 정해도 좋습니다만
+ 공개 메소드인 채로 두어야 한다는 점을 명심하세요. 이 가이드의 앞 부분에서 이야기했듯, 
+동작하기 위해서는 `private`나 `protected` 메소드여서는 안됩니다.
 
 이제 `show` 액션을 추가합시다
 
@@ -820,9 +843,14 @@ class ArticlesController < ApplicationController
   # snippet for brevity
 ```
 
-몇가지 주의해야할 점이 있습니다. 여기에서는 `Article.find`를 사용해서 데이터베이스에서 가져오고 싶은 글을 찾고 있습니다. 이 때, 받은 요청에서 `:id` 매개변수를 꺼내기 위해서 `params[:id]`를 인수로 사용하여 `find` 메소드를 호출하고 있습니다. 그리고 꺼낸 글을 저장하기 위해서 지역 변수가 아닌, 인스턴스 변수(`@`로 시작하는 변수를 말합니다)가 사용되고 있다는 점도 주의해주세요. 이는 레일스에서는 컨트롤러의 인스턴스 변수를 모두 뷰에게 건네주는 구조로 되어있기 때문입니다(역주: 레일스는 이를 위해서 소리없이 컨트롤러에서 뷰로 인스턴스 변수를 계속해서 복사합니다).
+몇가지 주의해야할 점이 있습니다.
+ 여기에서는 `Article.find`를 사용해서 데이터베이스에서 가져오고 싶은 글을 찾고 있습니다. 이 때, 받은 요청에서 `:id` 매개변수를 꺼내기 위해서 `params[:id]`를 인수로 사용하여 
+`find` 메소드를 호출하고 있습니다. 그리고 꺼낸 글을 저장하기 위해서 지역 변수가 아닌, 인스턴스 변수(`@`로 시작하는 변수를 말합니다)가 사용되고 있다는 점도 주의해주세요.
+ 이는 레일스에서는 컨트롤러의 인스턴스 변수를 모두 뷰에게 건네주는 구조로 되어있기 때문입니다
+(역주: 레일스는 이를 위해서 소리없이 컨트롤러에서 뷰로 인스턴스 변수를 계속해서 복사합니다).
 
-그러면, `app/views/articles/show.html.erb` 파일을 생성하고, 아래와 같이 추가합니다.
+그러면, `app/views/articles/show.html.erb` 파일을 생성하고, 
+아래와 같이 추가합니다.
 
 ```html+erb
 <p>
@@ -836,19 +864,24 @@ class ArticlesController < ApplicationController
 </p>
 ```
 
-이렇게 변경하고 나면, 드디어 새로운 글을 작성할 수 있게 됩니다. <http://localhost:3000/articles/new> 를 브라우저에서 열고 확인해보죠.
+이렇게 변경하고 나면,
+ 드디어 새로운 글을 작성할 수 있게 됩니다. <http://localhost:3000/articles/new> 를 브라우저에서 열고 확인해보죠.
 
 ![글 페이지](images/getting_started/show_action_for_articles.png)
 
 ### 모든 글을 한번에 보기
 
-이제 글 하나를 보여줄 수 있게 되었습니다만, 이번에는 기사 전체 목록을 볼 수 있게 해봅시다. 이번에도 `bin/rails routes`에서 라우팅을 확인하면, 아래와 같은 라우팅이 이미 존재하고 있습니다.
+이제 글 하나를 보여줄 수 있게 되었습니다만, 
+이번에는 기사 전체 목록을 볼 수 있게 해봅시다. 이번에도 `bin/rails routes`에서 라우팅을 확인하면, 아래와 같은 라우팅이 이미 존재하고 있습니다.
 
 ```
 articles GET    /articles(.:format)          articles#index
 ```
 
-이 라우팅에 대응하는 `index` 액션을 `app/controllers/articles_controller.rb`의 `ArticlesController`에 추가합니다. `index` 액션은 컨트롤러의 가장 위에 두는 것이 일반적입니다. 그럼 한번 해보죠.
+이 라우팅에 대응하는 `index` 액션을
+ `app/controllers/articles_controller.rb`의 `ArticlesController`에 추가합니다. 
+`index` 액션은 컨트롤러의 가장 위에 두는 것이 일반적입니다. 
+그럼 한번 해보죠.
 
 ```ruby
 class ArticlesController < ApplicationController
@@ -866,7 +899,8 @@ class ArticlesController < ApplicationController
   # snippet for brevity
 ```
 
-마지막으로 이 액션과 연결되는 뷰를 `app/views/articles/index.html.erb`에 추가합니다.
+마지막으로 이 액션과 연결되는 뷰를 
+`app/views/articles/index.html.erb`에 추가합니다.
 
 ```html+erb
 <h1>Listing articles</h1>
@@ -887,11 +921,13 @@ class ArticlesController < ApplicationController
 </table>
 ```
 
-이것으로 <http://localhost:3000/articles> 를 브라우저에서 열면, 작성된 글 목록을 볼 수 있습니다.
+이것으로 <http://localhost:3000/articles> 
+를 브라우저에서 열면, 작성된 글 목록을 볼 수 있습니다.
 
 ### 링크 추가하기
 
-지금까지 글의 작성, 보기, 목록 보기가 가능하도록 만들었습니다. 이번에는 페이지 간의 이동을 할 수 있도록 링크를 추가해보죠.
+지금까지 글의 작성, 보기, 
+목록 보기가 가능하도록 만들었습니다. 이번에는 페이지 간의 이동을 할 수 있도록 링크를 추가해보죠.
 
 `app/views/welcome/index.html.erb`을 열어서 다음과 같이 수정해주세요.
 
@@ -900,9 +936,13 @@ class ArticlesController < ApplicationController
 <%= link_to 'My Blog', controller: 'articles' %>
 ```
 
-`link_to` 메소드는 레일스의 내장 헬퍼 중 하나입니다. 이 메소드는 지정된 텍스트를 가지고 링크를 생성하고, 클릭 시에 이동할 곳을 지정할 수 있습니다. 여기에서는 글 목록을 볼 수 있는 경로를 지정합니다.
+`link_to` 메소드는 레일스의 내장 헬퍼 중 하나입니다. 
+이 메소드는 지정된 텍스트를 가지고 링크를 생성하고, 클릭 시에 이동할 곳을 지정할 수 있습니다. 
+여기에서는 글 목록을 볼 수 있는 경로를 지정합니다.
 
-다른 뷰로 이동할 수 있는 링크도 만들어 봅시다. "New Article" 링크를 `app/views/articles/index.html.erb`의 `<table>` 위에 추가합니다.
+다른 뷰로 이동할 수 있는 링크도 만들어 봅시다. 
+"New Article" 링크를 `app/views/articles/index.html.erb`의 
+`<table>` 위에 추가합니다.
 
 ```erb
 <%= link_to 'New article', new_article_path %>
@@ -910,7 +950,8 @@ class ArticlesController < ApplicationController
 
 이 링크를 클릭하면 새 글을 작성하기 위한 양식이 나타나게 됩니다.
 
-`app/views/articles/new.html.erb`의 양식 아래에 글을 쓰지 않고 이전의 `index` 액션으로 돌아가기 위한 링크도 추가해봅시다.
+`app/views/articles/new.html.erb`의 양식 아래에 글을 쓰지 않고 
+이전의 `index` 액션으로 돌아가기 위한 링크도 추가해봅시다.
 
 ```erb
 <%= form_with scope: :article, url: articles_path, local: true do |form| %>
@@ -920,7 +961,9 @@ class ArticlesController < ApplicationController
 <%= link_to 'Back', articles_path %>
 ```
 
-마지막으로 `app/views/articles/show.html.erb` 템플릿에 `index` 액션으로 돌아가기 위한 링크를 추가하여, 글을 보고 있던 사용자가 목록으로 돌아갈 수 있게 합시다.
+마지막으로 `app/views/articles/show.html.erb` 템플릿에 
+`index` 액션으로 돌아가기 위한 링크를 추가하여,
+ 글을 보고 있던 사용자가 목록으로 돌아갈 수 있게 합시다.
 
 ```html+erb
 <p>
@@ -936,9 +979,14 @@ class ArticlesController < ApplicationController
 <%= link_to 'Back', articles_path %>
 ```
 
-TIP: 현재 있는 페이지와 같은 컨트롤러 내에 있는 액션으로 이동할 때에는 `:controller`를 지정할 필요가 없습니다. 기본값으로 현재 컨트롤러가 사용되기 때문입니다.
+TIP: 현재 있는 페이지와 같은 컨트롤러 내에 있는 액션으로 이동할 때에는 
+`:controller`를 지정할 필요가 없습니다.
+ 기본값으로 현재 컨트롤러가 사용되기 때문입니다.
 
-TIP: 레일스는 개발 모드(레일스의 기본 모드입니다)에서 요청이 있을 때마다 애플리케이션을 다시 읽어들입니다. 이것은 편하게 개발을 할 수 있게끔 하기 위함이며, 덕분에 변경이 있을 때마다 레일스 웹서버를 재기동할 필요가 없습니다.
+TIP: 레일스는 개발 모드(레일스의 기본 모드입니다)에서 요청이 있을 때마다 애플리케이션을 다시 읽어들입니다.
+ 이것은 편하게 개발을 할 수 있게끔 하기 위함이며,
+ 덕분에 변경이 있을 때마다 레일스 웹서버를 재기동할 필요가 없습니다.
+
 ### 검증(Validation) 추가
 
 모델 파일인 `app/models/article.rb`의 코드를 확인해보면 놀라울 정도로 간단합니다.
